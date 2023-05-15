@@ -18,6 +18,7 @@ export const addRequest = async (req, res) => {
     }
   
     await coll.insertOne(reqObj);
+    getRequests(req, res);
   
     res.status(201).send({message: "Request submitted. Please allow 24hrs for a response"})
     
@@ -50,6 +51,8 @@ export const editRequest = async (req, res) => {
     const updatedValue = req.body;
     await coll.updateOne(id, {$set: updatedValue});
   
+    getRequests(req, res);
+
     res.status(201).send({message: "request has been updated"});
     
   } catch (error) {
@@ -65,6 +68,7 @@ export const deleteRequest = async (req, res) => {
     const id = {"_id": new ObjectId(req.params.docId)}
     
     await coll.deleteOne(id);
+    getRequests(req, res);
   
     res.status(200).send({message: "request deleted"});
     
