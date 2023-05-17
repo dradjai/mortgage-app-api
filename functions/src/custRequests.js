@@ -9,18 +9,17 @@ export const addRequest = async (req, res) => {
 
   try {
     const { firstName, lastName, email, phone, location, 
-    propType, propValue, downPayment, credit, employment, scenario} = req.body;
+    propType, propValue, downPayment, credit, employment, scenario, userId} = req.body;
   
     const reqObj = {
       firstName, lastName, email, phone, location, propType, propValue,
-      downPayment, credit, employment, scenario,
+      downPayment, credit, employment, scenario, userId,
       createdAt: new Date().toLocaleString("en-US", {timeZone: "America/New_York"})
     }
   
     await coll.insertOne(reqObj);
     getRequests(req, res);
   
-    res.status(201).send({message: "Request submitted. Please allow 24hrs for a response"})
     
   } catch (error) {
       console.log(error);
@@ -32,15 +31,17 @@ export const addRequest = async (req, res) => {
 export const getRequests = async (req, res) => {
 
   try {
-      const reqCollection = await coll.find().toArray();
+    const userId = new ObjectId(req.params.userId)
+    const u_id = userId + "";
+    const requestColl = await coll.find({userId: { $in: [u_id]}}).toArray();
+    
       
-      res.status(201).send(reqCollection);
+    res.status(201).send(requestColl);
       
     } catch (error) {
         console.log(error);
       
     }
-
 }
 
 export const editRequest = async (req, res) => {
@@ -50,15 +51,13 @@ export const editRequest = async (req, res) => {
     const id = {"_id": new ObjectId(req.params.docId)}
     const updatedValue = req.body;
     await coll.updateOne(id, {$set: updatedValue});
-  
+
     getRequests(req, res);
 
-    res.status(201).send({message: "request has been updated"});
     
   } catch (error) {
       console.log(error);
   }
-
 }
 
 export const deleteRequest = async (req, res) => {
@@ -70,7 +69,6 @@ export const deleteRequest = async (req, res) => {
     await coll.deleteOne(id);
     getRequests(req, res);
   
-    res.status(200).send({message: "request deleted"});
     
   } catch (error) {
       console.log(error);

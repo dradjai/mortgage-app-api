@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import { addRequest, deleteRequest, editRequest, getRequests } from "./src/custRequests.js";
 import { addBroker, getBrokers } from "./src/brokers.js";
+import { addUser, loginUser } from "./src/users.js";
 
 const app = express();
 
@@ -11,14 +12,16 @@ app.use(express.json());
 
 // Add APIs - CRUD
 
-app.post('/requests', addRequest);
-app.get('/requests', getRequests);
-app.patch('/requests/:docId', editRequest);
-app.delete('/requests/:docId', deleteRequest);
+app.post('/requests/:userId', addRequest);
+app.get('/requests/:userId', getRequests);
+app.patch('/requests/:userId/:docId', editRequest);
+app.delete('/requests/:userId/:docId', deleteRequest);
 
 app.post('/brokers', addBroker);
 app.get('/brokers', getBrokers);
 
+app.post('/register', addUser )
+app.post('/login', loginUser)
 
 
 
