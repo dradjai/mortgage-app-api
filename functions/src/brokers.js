@@ -35,3 +35,18 @@ export const getBrokers = async (req, res) => {
   }
 
 }
+
+export const getBrokerByCity = async (req, res) => {
+  try {
+
+    const cityName = req.params.city;
+  
+    const brokerColl = await coll.find({city: { $in: [cityName]}}).toArray();
+    //const brokers = await coll.find({ city: city }).toArray();
+
+    res.status(201).send(brokerColl);
+  } catch (error) {
+      console.log(error);
+    
+  }
+}

@@ -1,8 +1,8 @@
 import functions from "firebase-functions";
 import express from "express";
 import cors from "cors";
-import { addRequest, deleteRequest, editRequest, getRequests } from "./src/custRequests.js";
-import { addBroker, getBrokers } from "./src/brokers.js";
+import { addRequest, deleteRequest, editRequest, getRequestCount, getRequests } from "./src/custRequests.js";
+import { addBroker, getBrokerByCity, getBrokers } from "./src/brokers.js";
 import { addUser, loginUser } from "./src/users.js";
 
 const app = express();
@@ -14,11 +14,14 @@ app.use(express.json());
 
 app.post('/requests/:userId', addRequest);
 app.get('/requests/:userId', getRequests);
+app.get('/request-count/:userId', getRequestCount);
 app.patch('/requests/:userId/:docId', editRequest);
 app.delete('/requests/:userId/:docId', deleteRequest);
 
+
 app.post('/brokers', addBroker);
 app.get('/brokers', getBrokers);
+app.get('/brokers-city/:city', getBrokerByCity);
 
 app.post('/register', addUser )
 app.post('/login', loginUser)

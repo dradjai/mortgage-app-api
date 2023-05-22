@@ -1,9 +1,27 @@
 import { db } from "./dbConnect.js";
 import { ObjectId } from "mongodb";
 
+
 const coll = db.collection("customer-requests");
 
 // Create Request
+
+
+export const getRequestCount = async (req, res) => {
+  try {
+    const userId = new ObjectId(req.params.userId)
+    const u_id = userId + ""; 
+    const requestColl = await coll.find({userId: { $in: [u_id]}}).toArray();
+    const reqLength = requestColl.length;
+
+    res.status(201).send({reqLength});
+      
+    } catch (error) {
+        console.log(error);
+      
+    }
+}
+
 
 export const addRequest = async (req, res) => {
 
@@ -16,7 +34,8 @@ export const addRequest = async (req, res) => {
       downPayment, credit, employment, scenario, userId,
       createdAt: new Date().toLocaleString("en-US", {timeZone: "America/New_York"})
     }
-  
+
+    
     await coll.insertOne(reqObj);
     getRequests(req, res);
   
@@ -32,10 +51,10 @@ export const getRequests = async (req, res) => {
 
   try {
     const userId = new ObjectId(req.params.userId)
-    const u_id = userId + "";
+    const u_id = userId + ""; 
     const requestColl = await coll.find({userId: { $in: [u_id]}}).toArray();
-    
-      
+   
+
     res.status(201).send(requestColl);
       
     } catch (error) {
